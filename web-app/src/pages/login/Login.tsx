@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
-import * as Yup from 'yup';
-import LoginForm from './LoginForm';
+import React, { Fragment } from "react";
+import * as Yup from "yup";
+import LoginForm from "./LoginForm";
 
-import { Formik } from 'formik';
+import { Formik } from "formik";
 
 interface ILoginForm {
   email: string;
@@ -10,14 +10,14 @@ interface ILoginForm {
 }
 
 const schema = Yup.object().shape({
-  email: Yup.string().email().required('Enter valid email-id'),
+  email: Yup.string().email().required("Enter valid email-id"),
   password: Yup.string()
     .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{8,20}\S$/, {
       message:
-        'Please valid password. One uppercase, one lowercase, one special character and no spaces',
+        "Please valid password. One uppercase, one lowercase, one special character and no spaces",
     })
     .required(
-      'Please valid password. One uppercase, one lowercase, one special character and no spaces',
+      "Please valid password. One uppercase, one lowercase, one special character and no spaces"
     ),
 });
 
@@ -27,8 +27,8 @@ function Login() {
     <Fragment>
       <Formik
         initialValues={{
-          password: '',
-          email: '',
+          password: "",
+          email: "",
         }}
         // eslint-disable-next-line
         onSubmit={(values: ILoginForm, actions) => {}}
