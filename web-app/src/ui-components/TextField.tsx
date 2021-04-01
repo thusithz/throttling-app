@@ -1,6 +1,6 @@
-import React, { Fragment, memo, FC } from 'react';
-import TextFieldAlias from '@material-ui/core/TextField';
-import { connect as connectFormik } from 'formik';
+import React, { Fragment, memo, FC } from "react";
+import TextFieldAlias from "@material-ui/core/TextField";
+import { connect as connectFormik } from "formik";
 
 // interface ITextFieldProps extends StandardTextFieldProps {
 //   id: string;
