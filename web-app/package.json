@@ -2,9 +2,7 @@
   "name": "web-app",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@material-ui/core": "^4.11.3",
-    "@material-ui/icons": "^4.11.2",
+  "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -15,13 +13,20 @@
     "@types/react-router-dom": "^5.1.7",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
-    "cross-env": "^7.0.3",
+    "eslint-config-react-app": "^6.0.0",
+    "husky": "^6.0.0",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-config-react": "^1.1.7",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.23.1",
     "eslint-plugin-sonarjs": "^0.6.0",
+    "typescript": "^4.1.2"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "cross-env": "^7.0.3",
     "formik": "^2.2.6",
     "prettier": "^2.2.1",
     "react": "^17.0.2",
@@ -29,18 +34,22 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1",
     "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --maxWorkers=2",
     "eject": "react-scripts eject",
     "lint": "eslint --fix src/",
     "lint:warn": "eslint src/ --ext .ts --ext .tsx . -c .eslintrc.warn.json",
-    "prettier": "prettier --write --ext .ts --ext .tsx ."
+    "prettier": "prettier --write '{src,test}/**/*.{js,ts,json,md}'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn format && yarn lint && yarn test",
+      "pre-push": "yarn test"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -59,8 +68,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "eslint-config-react-app": "^6.0.0"
   }
 }
