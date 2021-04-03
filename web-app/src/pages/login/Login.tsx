@@ -4,7 +4,7 @@ import LoginForm from "./LoginForm";
 
 import { Formik } from "formik";
 
-interface ILoginForm {
+interface iLoginForm {
   email: string;
   password: string;
 }
@@ -31,7 +31,7 @@ function Login() {
           email: "",
         }}
         // eslint-disable-next-line
-        onSubmit={(values: ILoginForm, actions) => {}}
+        onSubmit={(values: iLoginForm, actions) => {}}
         validationSchema={schema}
         validateOnChange
         validateOnBlur

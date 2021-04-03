@@ -2,7 +2,7 @@ import React, { Fragment, memo, FC } from "react";
 import TextFieldAlias from "@material-ui/core/TextField";
 import { connect as connectFormik } from "formik";
 
-// interface ITextFieldProps extends StandardTextFieldProps {
+// interface iTextFieldProps extends StandardTextFieldProps {
 //   id: string;
 //   label: string;
 //   placeholder: string;
@@ -30,6 +30,7 @@ const TextField: FC<any> = (props) => {
       <TextFieldAlias
         {...props}
         onChange={onChange}
+        onFocus={onChange}
         helperText={errors[name] && touched[name] ? errors[name] : undefined}
         error={errors[name] && touched[name] ? true : false}
       />

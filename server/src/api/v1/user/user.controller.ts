@@ -8,7 +8,7 @@ function login(req: Request, res: Response, next: NextFunction) {
     .login(req.body)
     .then((user) =>
       user
-        ? res.json(user)
+        ? res.json({ ...user, message: "Login successfull !" })
         : res.status(400).json({ message: "Username or password is incorrect" })
     )
     .catch((err) => next(err));

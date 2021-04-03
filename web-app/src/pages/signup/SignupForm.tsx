@@ -1,11 +1,16 @@
-import React from "react";
+import React, { memo, useState } from "react";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect as connectFormik } from "formik";
 
 import LeftImageContainer from "../components/LeftImageContainer";
 import TextField from "../../ui-components/TextField";
 import Button from "../../ui-components/Button";
+import Alert, { iAlert } from "../../ui-components/Alert";
+
+import * as helpers from "../../api/helpers";
+import apiRouets from "../../config/apiRoutes";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -30,21 +35,55 @@ const defaultFieldPros = (fieldName: string) => {
 };
 
 // eslint-disable-next-line
-export default function LoginForm() {
+function SignupForm(props: any) {
   const classes = useStyles();
+  const [alertQueue, setAlertQueue] = useState<iAlert[]>([]);
+  
 
-  const onSubmit = (e: any) => {
+  const { formik } = props;
+  const { values, isValid, dirty } = formik;
+
+  const onSubmit = async (e: any) => {
     e.preventDefault();
+    if (isValid) {
+      try {
+        const { email, password, firstName, lastName } = values;
+        const res: any = await helpers.post(apiRouets.REGISTER, {
+          email,
+          password,
+          firstName,
+          lastName,
+        });
+        const status = res.status;
+        setAlertQueue([
+          ...alertQueue,
+          {
+            severity: status === 201 ? "success" : "error",
+            message: res.data.message,
+            id: new Date().getTime(),
+          },
+        ]);
+
+        //TODO Need to dispatch into store and redirect
+        //if (status === 201) {}
+      } catch (err) {
+        setAlertQueue([
+          ...alertQueue,
+          {
+            severity: "error",
+            message: "Technical Error",
+            id: new Date().getTime(),
+          },
+        ]);
+      }
+    }
   };
 
   return (
     <LeftImageContainer label="Sign Up">
+      <Alert alertQueue={alertQueue} setAlertQueue={setAlertQueue} />
       <form className={classes.form}>
-        <TextField
-          {...defaultFieldPros("firstName")}
-          autoFocus
-          label="First Name"
-        />
+        <TextField {...defaultFieldPros("firstName")} label="First Name" />
         <TextField {...defaultFieldPros("lastName")} label="Last Name" />
         <TextField {...defaultFieldPros("email")} label="Email Address" />
         <TextField
@@ -64,6 +103,7 @@ export default function LoginForm() {
           variant="contained"
           color="primary"
           onClick={onSubmit}
+          disabled={!dirty || !isValid}
           className={classes.submit}
         >
           Sign Up
@@ -79,3 +119,5 @@ export default function LoginForm() {
     </LeftImageContainer>
   );
 }
+
+export default memo(connectFormik(SignupForm));
