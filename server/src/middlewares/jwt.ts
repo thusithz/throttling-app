@@ -1,7 +1,8 @@
-import { Request } from 'express';
-import expressJwt from 'express-jwt';
+import { Request } from "express";
+import expressJwt from "express-jwt";
 
-import userService from '../api/v1/user/user.service';
+import userService from "../api/v1/user/user.service";
+import publicRoutes from "../config/publicRoutes";
 
 // eslint-disable-next-line
 async function isRevoked(req: Request, payload: any, next: any) {
@@ -12,16 +13,17 @@ async function isRevoked(req: Request, payload: any, next: any) {
     return next(null, true);
   }
   next();
-};
+}
 
-function jwt(){
-  const secret = process.env.SECRET || '12wrty56yu';
-  return expressJwt({ secret, algorithms: [process.env.ALGORITHMS || 'HS256'], isRevoked }).unless({
-    path: [
-      // exclude public routes that are n't require authentication
-      '/api/v1/user/login',
-      '/api/v1/user/register',
-    ],
+function jwt() {
+  const secret = process.env.SECRET || "12wrty56yu";
+  return expressJwt({
+    secret,
+    algorithms: [process.env.ALGORITHMS || "HS256"],
+    isRevoked,
+  }).unless({
+    // exclude public routes that are n't require authentication
+    path: publicRoutes,
   });
 }
 

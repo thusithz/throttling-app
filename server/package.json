@@ -9,7 +9,8 @@
     "build": "tsc",
     "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules src/index.ts",
     "lint": "eslint src/**/*.ts --fix",
-    "test": "jest --maxWorkers=2 src"
+    "test": "jest --maxWorkers=2 src",
+    "prettier": "prettier --write '{src,test}/**/*.{js,ts,json,md}'"
   },
   "husky": {
     "hooks": {
@@ -56,6 +57,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
     "morgan": "^1.10.0",
+    "prettier": "^2.2.1",
     "redis": "^3.1.0"
   },
   "devDependencies": {
