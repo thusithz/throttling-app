@@ -27,12 +27,6 @@ app.use(middlewares.ipLimiter);
  */
 app.use(middlewares.jwtValidate());
 
-app.get('/', (req, res) => {
-  res.json({
-    message: 'End points are starting from /api',
-  });
-});
-
 app.use('/api/v1/user', userAPI);
 
 app.use(middlewares.notFound);
