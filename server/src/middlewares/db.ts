@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 import User from "../api/v1/user/user.model";
 
 const connectionOptions = {

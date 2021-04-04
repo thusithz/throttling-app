@@ -1,12 +1,23 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
+import logger from "./logger";
 
 function getStack(err: Error) {
   return {
     stack: process.env.NODE_ENV === "production" ? "" : err.stack,
   };
 }
+// eslint-disable-next-line
+const errorHandler: ErrorRequestHandler = function (
+  err,
+  req,
+  res,
+  // eslint-disable-next-line
+  next
+) {
 
-const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
+  //logging errors
+  logger.error(`errorHandler : ${req.ip}, ${err}`);
+
   if (typeof err === "string") {
     // custom application error
     return res.status(400).json({ message: err });

@@ -38,7 +38,6 @@ const defaultFieldPros = (fieldName: string) => {
 function SignupForm(props: any) {
   const classes = useStyles();
   const [alertQueue, setAlertQueue] = useState<iAlert[]>([]);
-  
 
   const { formik } = props;
   const { values, isValid, dirty } = formik;

@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import redis from "redis";
 
+import logger from "./logger";
+
 const redisClient = redis.createClient();
 
 const WINDOW_REQUEST_COUNT = process.env.WINDOW_REQUEST_COUNT || 1000000;
@@ -25,7 +27,7 @@ const ipLimiter = (req: Request, res: Response, next: NextFunction) => {
       throw new Error("Redis client does not exist!");
     }
     // fetch saved data for the IP
-    redisClient.get(`LIMIT_${req.ip}`, function (err, record: any) {
+    redisClient.get(`LIMIT_${req.ip}`, (err, record: any) => {
       if (err) throw err;
 
       const currentRequestTime = new Date().getTime();
@@ -44,26 +46,26 @@ const ipLimiter = (req: Request, res: Response, next: NextFunction) => {
         next();
       } else {
         let data = JSON.parse(record);
-        let intervalStartTime = new Date(
+        const intervalStartTime = new Date(
           currentRequestTime - LOG_INTERVAL_IN_SECONDS * 1000
         ).getTime();
-        let requestsWithinInterval = data.filter((entry: any) => {
-          return entry.requestTime > intervalStartTime;
-        });
+        const requestsWithinInterval = data.filter(
+          (entry: any) => entry.requestTime > intervalStartTime
+        );
 
-        let totalWindowRequestsCount = requestsWithinInterval.reduce(
-          (accumulator: any, entry: any) => {
-            return accumulator + entry.requestCount;
-          },
+        const totalWindowRequestsCount = requestsWithinInterval.reduce(
+          (accumulator: any, entry: any) => accumulator + entry.requestCount,
           0
         );
         // check cached request count withing the configured time interval
         if (totalWindowRequestsCount >= WINDOW_REQUEST_COUNT) {
+          const msg = `You have exceeded the ${WINDOW_REQUEST_COUNT} requests in ${LOG_INTERVAL_IN_MINITUES} minitues limit`;
+          logger.info(`ipLimiter ${req.ip} ${msg}`);
           res.status(400).json({
-            message: `You have exceeded the ${WINDOW_REQUEST_COUNT} requests in ${LOG_INTERVAL_IN_MINITUES} minitues limit`,
+            message: msg,
           });
         } else {
-          let [lastRequestLog] = data;
+          const [lastRequestLog] = data;
 
           // Calcluate new expiration time agains to the first saved request
           let TTL =
@@ -74,10 +76,13 @@ const ipLimiter = (req: Request, res: Response, next: NextFunction) => {
 
           //  Increment the request count if time is not reach the configured time interval
           if (lastRequestLog.requestTime > intervalStartTime) {
-            lastRequestLog.requestCount++;
+            lastRequestLog.requestCount += 1;
             data = [lastRequestLog];
           } else {
-            // This block will reach because of the auto key expiration in redis. just added for if any edge cases
+            /**
+             * This block will reach because of the auto key expiration in redis.
+             * just added for if any edge cases
+             */
             data = [{ requestTime: currentRequestTime, requestCount: 1 }];
             TTL = LOG_INTERVAL_IN_SECONDS;
           }

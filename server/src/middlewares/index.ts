@@ -1,6 +1,6 @@
 import handlers from "./handlers";
-import jwtValidate from "./jwt";
 import ipLimiter from "./ipLimiter";
+import jwtValidate from "./jwt";
 
 export default {
   ipLimiter,

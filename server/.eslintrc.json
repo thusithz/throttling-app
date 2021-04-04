@@ -16,6 +16,7 @@
     "@typescript-eslint/no-unused-vars": "error",
     "import/extensions": "off",
     "import/no-unresolved": "off",
+    "max-lines-per-function": ["error", 150],
     "import-helpers/order-imports": [
       "error",
       {
