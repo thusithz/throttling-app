@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import CircluarProgress from "@material-ui/core/CircularProgress";
+import React, { memo } from 'react';
+import CircluarProgress from '@material-ui/core/CircularProgress';
 
 function Loading() {
   return (

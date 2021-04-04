@@ -1,22 +1,22 @@
-import React, { Fragment, memo, useState } from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import { connect as connectFormik } from "formik";
+import React, { Fragment, memo, useState } from 'react';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import { connect as connectFormik } from 'formik';
 
-import LeftImageContainer from "../components/LeftImageContainer";
-import TextField from "../../ui-components/TextField";
-import Button from "../../ui-components/Button";
-import Alert, { iAlert } from "../../ui-components/Alert";
+import LeftImageContainer from '../components/LeftImageContainer';
+import TextField from '../../ui-components/TextField';
+import Button from '../../ui-components/Button';
+import Alert, { iAlert } from '../../ui-components/Alert';
 
-import * as helpers from "../../api/helpers";
-import apiRouets from "../../config/apiRoutes";
+import * as helpers from '../../api/helpers';
+import apiRouets from '../../config/apiRoutes';
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    width: "100%",
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -45,7 +45,7 @@ function LoginForm(props: any) {
         setAlertQueue([
           ...alertQueue,
           {
-            severity: status === 200 ? "success" : "error",
+            severity: status === 200 ? 'success' : 'error',
             message: res.data.message,
             id: new Date().getTime(),
           },
@@ -57,8 +57,8 @@ function LoginForm(props: any) {
         setAlertQueue([
           ...alertQueue,
           {
-            severity: "error",
-            message: "Technical Error",
+            severity: 'error',
+            message: 'Technical Error',
             id: new Date().getTime(),
           },
         ]);

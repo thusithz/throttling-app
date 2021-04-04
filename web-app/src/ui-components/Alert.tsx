@@ -1,6 +1,6 @@
-import React, { Fragment, memo } from "react";
-import { Alert as MuiAlert, AlertTitle } from "@material-ui/lab";
-import Snackbar from "@material-ui/core/Snackbar";
+import React, { Fragment, memo } from 'react';
+import { Alert as MuiAlert, AlertTitle } from '@material-ui/lab';
+import Snackbar from '@material-ui/core/Snackbar';
 
 export interface iAlert {
   severity: any;
@@ -22,14 +22,15 @@ const Alert = (props: alertProps) => {
 
   return (
     <Fragment>
-      {alertQueue.map((alert: iAlert) => {
+      {alertQueue.map((alert: iAlert, key) => {
         return (
           <Snackbar
             open
+            key={key}
             autoHideDuration={5000}
             onClose={() => onClose(alert.id)}
             disableWindowBlurListener
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
             <MuiAlert
               elevation={6}

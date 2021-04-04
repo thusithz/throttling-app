@@ -1,5 +1,5 @@
-import axios from "axios";
-import config from "../config/app.config";
+import axios from 'axios';
+import config from '../config/app.config';
 
 const instance = axios.create({
   baseURL: config.BASE_URL,
@@ -15,7 +15,7 @@ const instance = axios.create({
 export async function get<T>(url: string): Promise<T> {
   return new Promise((resolve, reject) => {
     instance({
-      method: "GET",
+      method: 'GET',
       url,
     })
       .then((res: any) => {
@@ -30,7 +30,7 @@ export async function get<T>(url: string): Promise<T> {
 export async function post<T>(url: string, data: any): Promise<T> {
   return new Promise((resolve, reject) => {
     instance({
-      method: "POST",
+      method: 'POST',
       url,
       data,
     })

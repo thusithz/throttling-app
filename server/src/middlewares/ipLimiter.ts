@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from "express";
-import redis from "redis";
+import { Request, Response, NextFunction } from 'express';
+import redis from 'redis';
 
-import logger from "./logger";
+import logger from './logger';
 
 const redisClient = redis.createClient();
 
 const WINDOW_REQUEST_COUNT = process.env.WINDOW_REQUEST_COUNT || 1000000;
 const LOG_INTERVAL_IN_MINITUES = parseFloat(
-  process.env.LOG_INTERVAL_IN_MINITUES || "0"
+  process.env.LOG_INTERVAL_IN_MINITUES || '0',
 );
 const LOG_INTERVAL_IN_SECONDS = LOG_INTERVAL_IN_MINITUES * 60;
 
@@ -18,13 +18,13 @@ const LOG_INTERVAL_IN_SECONDS = LOG_INTERVAL_IN_MINITUES * 60;
  * @param ttl
  */
 const setRedisData = (ip: string, data: string, ttl: number) => {
-  redisClient.set(`LIMIT_${ip}`, data, "EX", Math.round(ttl));
+  redisClient.set(`LIMIT_${ip}`, data, 'EX', Math.round(ttl));
 };
 
 const ipLimiter = (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!redisClient) {
-      throw new Error("Redis client does not exist!");
+      throw new Error('Redis client does not exist!');
     }
     // fetch saved data for the IP
     redisClient.get(`LIMIT_${req.ip}`, (err, record: any) => {
@@ -41,21 +41,21 @@ const ipLimiter = (req: Request, res: Response, next: NextFunction) => {
               requestCount: 1,
             },
           ]),
-          LOG_INTERVAL_IN_SECONDS
+          LOG_INTERVAL_IN_SECONDS,
         );
         next();
       } else {
         let data = JSON.parse(record);
         const intervalStartTime = new Date(
-          currentRequestTime - LOG_INTERVAL_IN_SECONDS * 1000
+          currentRequestTime - LOG_INTERVAL_IN_SECONDS * 1000,
         ).getTime();
         const requestsWithinInterval = data.filter(
-          (entry: any) => entry.requestTime > intervalStartTime
+          (entry: any) => entry.requestTime > intervalStartTime,
         );
 
         const totalWindowRequestsCount = requestsWithinInterval.reduce(
           (accumulator: any, entry: any) => accumulator + entry.requestCount,
-          0
+          0,
         );
         // check cached request count withing the configured time interval
         if (totalWindowRequestsCount >= WINDOW_REQUEST_COUNT) {

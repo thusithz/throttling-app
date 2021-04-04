@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-import User from "../api/v1/user/user.model";
+import User from '../api/v1/user/user.model';
 
 const connectionOptions = {
   useCreateIndex: true,
@@ -9,7 +9,7 @@ const connectionOptions = {
   useFindAndModify: false,
 };
 
-mongoose.connect(process.env.MONGODB_URL || "", connectionOptions);
+mongoose.connect(process.env.MONGODB_URL || '', connectionOptions);
 
 mongoose.Promise = global.Promise;
 

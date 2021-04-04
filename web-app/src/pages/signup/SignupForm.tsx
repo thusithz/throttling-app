@@ -1,20 +1,20 @@
-import React, { memo, useState } from "react";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import { connect as connectFormik } from "formik";
+import React, { memo, useState } from 'react';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import { connect as connectFormik } from 'formik';
 
-import LeftImageContainer from "../components/LeftImageContainer";
-import TextField from "../../ui-components/TextField";
-import Button from "../../ui-components/Button";
-import Alert, { iAlert } from "../../ui-components/Alert";
+import LeftImageContainer from '../components/LeftImageContainer';
+import TextField from '../../ui-components/TextField';
+import Button from '../../ui-components/Button';
+import Alert, { iAlert } from '../../ui-components/Alert';
 
-import * as helpers from "../../api/helpers";
-import apiRouets from "../../config/apiRoutes";
+import * as helpers from '../../api/helpers';
+import apiRouets from '../../config/apiRoutes';
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    width: "100%",
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
 
 const defaultFieldPros = (fieldName: string) => {
   return {
-    variant: "outlined",
-    margin: "normal",
+    variant: 'outlined',
+    margin: 'normal',
     required: true,
     fullWidth: true,
     id: fieldName,
@@ -57,7 +57,7 @@ function SignupForm(props: any) {
         setAlertQueue([
           ...alertQueue,
           {
-            severity: status === 201 ? "success" : "error",
+            severity: status === 201 ? 'success' : 'error',
             message: res.data.message,
             id: new Date().getTime(),
           },
@@ -69,8 +69,8 @@ function SignupForm(props: any) {
         setAlertQueue([
           ...alertQueue,
           {
-            severity: "error",
-            message: "Technical Error",
+            severity: 'error',
+            message: 'Technical Error',
             id: new Date().getTime(),
           },
         ]);
@@ -82,17 +82,17 @@ function SignupForm(props: any) {
     <LeftImageContainer label="Sign Up">
       <Alert alertQueue={alertQueue} setAlertQueue={setAlertQueue} />
       <form className={classes.form}>
-        <TextField {...defaultFieldPros("firstName")} label="First Name" />
-        <TextField {...defaultFieldPros("lastName")} label="Last Name" />
-        <TextField {...defaultFieldPros("email")} label="Email Address" />
+        <TextField {...defaultFieldPros('firstName')} label="First Name" />
+        <TextField {...defaultFieldPros('lastName')} label="Last Name" />
+        <TextField {...defaultFieldPros('email')} label="Email Address" />
         <TextField
-          {...defaultFieldPros("password")}
+          {...defaultFieldPros('password')}
           autoComplete="current-password"
           label="Password"
           type="password"
         />
         <TextField
-          {...defaultFieldPros("confirmPassword")}
+          {...defaultFieldPros('confirmPassword')}
           type="password"
           label="Confirm password"
         />
@@ -110,7 +110,7 @@ function SignupForm(props: any) {
         <Grid container>
           <Grid item>
             <Link href="/login" variant="body2">
-              {"Already signup ? Sign In"}
+              {'Already signup ? Sign In'}
             </Link>
           </Grid>
         </Grid>

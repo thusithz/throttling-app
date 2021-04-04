@@ -1,7 +1,7 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { iUser } from "./user.model";
-import UserSchema from "../../../middlewares/db";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { iUser } from './user.model';
+import UserSchema from '../../../middlewares/db';
 
 const User: any = UserSchema.User;
 
@@ -10,8 +10,8 @@ async function login({ email, password }: iUser) {
   if (user && bcrypt.compareSync(password, user.hash)) {
     const token = jwt.sign(
       { sub: user.id },
-      process.env.SECRET || "12wrty56yu",
-      { expiresIn: "1d" }
+      process.env.SECRET || '12wrty56yu',
+      { expiresIn: '1d' },
     );
     return {
       ...user.toJSON(),
@@ -34,7 +34,7 @@ async function create(userParam: iUser) {
 
   // hash password
   if (userParam.password) {
-    user["hash"] = bcrypt.hashSync(userParam.password, 10);
+    user['hash'] = bcrypt.hashSync(userParam.password, 10);
   }
 
   // save user
@@ -45,7 +45,7 @@ async function update(id: string, userParam: iUser) {
   const user = await User.findById(id);
 
   // validate
-  if (!user) throw "User not found";
+  if (!user) throw 'User not found';
   if (
     user.email !== userParam.email &&
     (await User.findOne({ email: userParam.email }))

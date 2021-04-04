@@ -1,21 +1,21 @@
-import React, { Fragment, Suspense, lazy } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import React, { Fragment, Suspense, lazy } from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
 
-import Loading from "./ui-components/Loading";
+import Loading from './ui-components/Loading';
 
 const LoginLazy = lazy(
-  () => import(/* webpackChunkName: "login-page" */ "./pages/login/Login")
+  () => import(/* webpackChunkName: "login-page" */ './pages/login/Login'),
 );
 
 const SignupLazy = lazy(
-  () => import(/* webpackChunkName: "signup-page" */ "./pages/signup/Signup")
+  () => import(/* webpackChunkName: "signup-page" */ './pages/signup/Signup'),
 );
 
 const DashboardLazy = lazy(
   () =>
     import(
-      /* webpackChunkName: "dashboard-page" */ "./pages/dashboard/Dashboard"
-    )
+      /* webpackChunkName: "dashboard-page" */ './pages/dashboard/Dashboard'
+    ),
 );
 
 // eslint-disable-next-line
