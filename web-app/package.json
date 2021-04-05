@@ -30,6 +30,7 @@
     "axios": "^0.21.1",
     "cross-env": "^7.0.3",
     "formik": "^2.2.6",
+    "history": "^5.0.0",
     "prettier": "^2.2.1",
     "react": "^17.0.2",
     "react-app": "^1.1.2",
@@ -41,10 +42,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
-    "test": "react-scripts test --maxWorkers=2",
+    "test": "react-scripts test --maxWorkers=2 --watchAll=false --coverage",
     "eject": "react-scripts eject",
-    "lint": "eslint --fix src/",
-    "lint:warn": "eslint src/ --ext .ts --ext .tsx . -c .eslintrc.warn.json",
+    "lint": "eslint --fix src/  --ignore-pattern '**/*.test.tsx'",
+    "lint:warn": "eslint src/ --ext .ts --ext .tsx . -c .eslintrc.warn --ignore-pattern '**/*.test.tsx'",
     "prettier": "prettier --write '{src,test}/**/*.{tsx,ts,json,md}'"
   },
   "husky": {

@@ -18,14 +18,14 @@ app.use(cors());
 app.use(express.json());
 
 /**
+ * Validate user session
+ */
+ app.use(middlewares.jwtValidate());
+
+/**
  * Throttling IPs based on Time Intervel
  */
 app.use(middlewares.ipLimiter);
-
-/**
- * Validate user session
- */
-app.use(middlewares.jwtValidate());
 
 app.use('/api/v1/user', userAPI);
 

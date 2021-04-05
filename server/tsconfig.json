@@ -1,7 +1,8 @@
 {
   "include": ["src/**/*.ts"],
   "exclude": [
-    "src/**/*.test.ts"
+    "node_modules",
+    "src/_test/**/*.ts"
   ],
   "compilerOptions": {
     "outDir": "dist",
@@ -9,9 +10,8 @@
     "target": "es2018",
     "module": "commonjs",
     "sourceMap": false,
-
     "strict": true,
-
+    "types": ["jest", "node"],
     "esModuleInterop": true,
 
     "removeComments": true,

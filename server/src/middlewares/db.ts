@@ -9,9 +9,13 @@ const connectionOptions = {
   useFindAndModify: false,
 };
 
-mongoose.connect(process.env.MONGODB_URL || '', connectionOptions);
+if (mongoose.connection.readyState === 0) {
+    mongoose.connect(process.env.MONGODB_URL || '', connectionOptions);
+}
 
 mongoose.Promise = global.Promise;
+
+// process.on('SIGINT', mongoose.disconnect);
 
 export default {
   User,

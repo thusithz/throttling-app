@@ -4,12 +4,12 @@ import LoginForm from './LoginForm';
 
 import { Formik } from 'formik';
 
-interface iLoginForm {
+export interface iLoginForm {
   email: string;
   password: string;
 }
 
-const schema = Yup.object().shape({
+export const schema = Yup.object().shape({
   email: Yup.string().email().required('Enter valid email-id'),
   password: Yup.string()
     .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{8,20}\S$/, {

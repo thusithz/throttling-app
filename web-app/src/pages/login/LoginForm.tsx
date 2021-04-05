@@ -24,6 +24,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const defaultFieldPros = (fieldName: string) => {
+  return {
+    variant: 'outlined',
+    margin: 'normal',
+    required: true,
+    fullWidth: true,
+    id: fieldName,
+    name: fieldName,
+    autoComplete: fieldName,
+    role: fieldName,
+  };
+};
+
 // eslint-disable-next-line
 function LoginForm(props: any) {
   const classes = useStyles();
@@ -71,25 +84,11 @@ function LoginForm(props: any) {
       <Alert alertQueue={alertQueue} setAlertQueue={setAlertQueue} />
       <LeftImageContainer label="Sign In">
         <form className={classes.form}>
+          <TextField {...defaultFieldPros('email')} label="Email Address" />
           <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
+            {...defaultFieldPros('password')}
             label="Password"
             type="password"
-            id="password"
             autoComplete="current-password"
           />
           <FormControlLabel
@@ -104,6 +103,7 @@ function LoginForm(props: any) {
             onClick={onSubmit}
             disabled={!dirty || !isValid}
             className={classes.submit}
+            id="submit"
           >
             Sign In
           </Button>
