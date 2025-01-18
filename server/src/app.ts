@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-// import { morganStream } from "./middlewares/logger";
+import './middlewares/db';
+import { morganStream } from './middlewares/logger';
 
 dotenv.config();
 
@@ -12,7 +13,7 @@ import middlewares from './middlewares';
 
 const app = express();
 
-app.use(morgan('combined')); // { stream: morganStream }
+app.use(morgan('combined', morganStream));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
@@ -20,7 +21,7 @@ app.use(express.json());
 /**
  * Validate user session
  */
- app.use(middlewares.jwtValidate());
+app.use(middlewares.jwtValidate());
 
 /**
  * Throttling IPs based on Time Intervel

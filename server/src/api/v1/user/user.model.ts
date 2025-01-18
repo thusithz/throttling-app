@@ -1,12 +1,5 @@
-import { Schema, model, Document } from 'mongoose';
-
-export interface iUser extends Document {
-  email: string;
-  password: string;
-  hash?: string;
-  firstName?: string;
-  lastName?: string;
-}
+import { Schema, model } from 'mongoose';
+import { IUser } from './interfaces/IUser';
 
 const schema = new Schema({
   firstName: { type: String, required: true },
@@ -36,4 +29,4 @@ schema.set('toJSON', {
   },
 });
 
-export default model<iUser>('User', schema);
+export default model<IUser>('User', schema);

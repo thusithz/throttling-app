@@ -1,58 +1,69 @@
-import express, { Request, Response, NextFunction } from 'express';
-import userService from './user.service';
+import express, { Request, Response, NextFunction, Router } from 'express';
+import { userService } from './user.service';
+import { UserResponse } from './responses/UserResponse';
 
-const router = express.Router();
+export class UserController {
+  private router: Router = express.Router();
 
-function login(req: Request, res: Response, next: NextFunction) {
-  userService
-    .login(req.body)
-    .then((user) =>
-      user
-        ? res.json({ ...user, message: 'Login successfull !' })
-        : res
-            .status(400)
-            .json({ message: 'Username or password is incorrect' }),
-    )
-    .catch((err) => next(err));
+  constructor() {
+    this.initializeRoutes();
+  }
+
+  private initializeRoutes() {
+    this.router.post('/login', this.handleAsync(this.login));
+    this.router.post('/register', this.handleAsync(this.register));
+    this.router.get('/:id', this.handleAsync(this.getById));
+    this.router.put('/:id', this.handleAsync(this.update));
+    this.router.delete('/:id', this.handleAsync(this.delete));
+  }
+
+  private handleAsync(
+    fn: (req: Request, res: Response, next: NextFunction) => Promise<any>,
+  ) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      fn.bind(this)(req, res, next).catch(next);
+    };
+  }
+
+  private async login(req: Request, res: Response) {
+    const user = await userService.login(req.body);
+    if (!user) {
+      return UserResponse.badRequest(res, 'Invalid credentials');
+    }
+    return UserResponse.success(res, user, 'Login successful!');
+  }
+
+  private async register(req: Request, res: Response) {
+    await userService.create(req.body);
+    return UserResponse.created(res, 'User has been registered successfully');
+  }
+
+  private async getById(req: Request, res: Response) {
+    const user = await userService.findById(req.params.id);
+    return user ? UserResponse.success(res, user) : UserResponse.notFound(res);
+  }
+
+  private async update(req: Request, res: Response) {
+    await userService.update(req.params.id, req.body);
+    return UserResponse.success(
+      res,
+      null,
+      'User has been updated successfully',
+    );
+  }
+
+  private async delete(req: Request, res: Response) {
+    await userService.delete(req.params.id);
+    return UserResponse.success(
+      res,
+      null,
+      'User has been deleted successfully',
+    );
+  }
+
+  public getRouter(): Router {
+    return this.router;
+  }
 }
 
-function register(req: Request, res: Response, next: NextFunction) {
-  userService
-    .create(req.body)
-    .then(() =>
-      res
-        .status(201)
-        .json({ message: 'User has been registered successfully' }),
-    )
-    .catch((err) => next(err));
-}
-
-function getById(req: Request, res: Response, next: NextFunction) {
-  userService
-    .getById(req.params.id)
-    .then((user) => (user ? res.json(user) : res.sendStatus(404)))
-    .catch((err) => next(err));
-}
-
-function update(req: Request, res: Response, next: NextFunction) {
-  userService
-    .update(req.params.id, req.body)
-    .then(() => res.json({ message: 'User has been updated successfully' }))
-    .catch((err) => next(err));
-}
-
-function _delete(req: Request, res: Response, next: NextFunction) {
-  userService
-    .delete(req.params.id)
-    .then(() => res.json({ message: 'User has been deleted successfully' }))
-    .catch((err) => next(err));
-}
-
-// routes
-router.post('/login', login);
-router.post('/register', register);
-router.get('/:id', getById);
-router.put('/:id', update);
-router.delete('/:id', _delete);
-
-export default router;
+export default new UserController().getRouter();

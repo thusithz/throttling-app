@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import React, { Dispatch, Fragment, memo } from 'react';
 import { Alert as MuiAlert, AlertTitle } from '@material-ui/lab';
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -10,7 +10,7 @@ export interface iAlert {
 
 interface alertProps {
   alertQueue: iAlert[];
-  setAlertQueue(alert: iAlert[]): any;
+  setAlertQueue: Dispatch<React.SetStateAction<iAlert[]>>;
 }
 
 const Alert = (props: alertProps) => {

@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
-import CircluarProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function Loading() {
   return (
     <div>
-      <CircluarProgress
+      <CircularProgress
         size="60"
-        variant="static"
+        variant="determinate"
         color="primary"
         thickness={3}
       />

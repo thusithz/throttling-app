@@ -1,16 +1,38 @@
 import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import Login from './Login';
 
-describe('Login Page', () => {
-  afterEach(() => cleanup());
+jest.mock('axios');
 
-  test('Render', () => {
-    const { container, getAllByText, getByText } = render(<Login />);
-    const signInLabel = getAllByText(/Sign In/i);
-    const forgotPasswordLabel = getByText(/Forgot password?/i);
-    expect(container).toBeDefined();
-    expect(signInLabel.length).toBe(2);
-    expect(forgotPasswordLabel).toBeDefined();
+describe('Login Component', () => {
+  const renderLogin = () => {
+    render(
+      <BrowserRouter>
+        <Login />
+      </BrowserRouter>,
+    );
+  };
+
+  it('should render login form', () => {
+    renderLogin();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /sign in/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('should validate invalid email', async () => {
+    renderLogin();
+    const emailInput = screen.getByLabelText(/email/i);
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
+
+    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Email must be a valid email/i)).toBeInTheDocument();
+    });
   });
 });

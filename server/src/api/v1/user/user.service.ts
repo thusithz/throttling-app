@@ -1,77 +1,62 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { iUser } from './user.model';
-import UserSchema from '../../../middlewares/db';
+import { BaseService } from '../base/BaseService';
+import UserModel from './user.model';
+import { IUser } from './interfaces/IUser';
 
-const User: any = UserSchema.User;
+export class UserService extends BaseService<IUser> {
+  private readonly jwtSecret: string;
 
-async function login({ email, password }: iUser) {
-  const user = await User.findOne({ email });
-  if (user && bcrypt.compareSync(password, user.hash)) {
-    const token = jwt.sign(
-      { sub: user.id },
-      process.env.SECRET || '12wrty56yu',
-      { expiresIn: '1d' },
-    );
-    return {
-      ...user.toJSON(),
-      token,
-    };
+  constructor() {
+    super(UserModel);
+    this.jwtSecret = process.env.SECRET || '12wrty56yu';
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return bcrypt.hashSync(password, 10);
+  }
+
+  private generateToken(userId: string): string {
+    return jwt.sign({ sub: userId }, this.jwtSecret, { expiresIn: '1d' });
+  }
+
+  async login(credentials: { email: string; password: string }) {
+    const user = await this.model.findOne({ email: credentials.email });
+    if (user && bcrypt.compareSync(credentials.password, user.hash ?? '')) {
+      const token = this.generateToken(user.id);
+      return { ...user.toJSON(), token };
+    }
+    return null;
+  }
+
+  async create(userParam: IUser): Promise<IUser> {
+    await this.validateUniqueEmail(userParam.email);
+    if (userParam.password) {
+      userParam.hash = await this.hashPassword(userParam.password);
+    }
+    return super.create(userParam);
+  }
+
+  async update(id: string, userParam: IUser): Promise<IUser | null> {
+    const user = await this.findById(id);
+    if (!user) throw new Error('User not found');
+
+    if (user.email !== userParam.email) {
+      await this.validateUniqueEmail(userParam.email);
+    }
+
+    if (userParam.password) {
+      userParam.hash = await this.hashPassword(userParam.password);
+    }
+
+    return super.update(id, userParam);
+  }
+
+  private async validateUniqueEmail(email: string) {
+    if (await this.model.findOne({ email })) {
+      throw new Error(`Email "${email}" is already taken`);
+    }
   }
 }
 
-async function getById(id: string) {
-  return await User.findById(id);
-}
-
-async function create(userParam: iUser) {
-  // validate
-  if (await User.findOne({ email: userParam.email })) {
-    throw 'Email "' + userParam.email + '" is already taken';
-  }
-
-  let user = new User(userParam);
-
-  // hash password
-  if (userParam.password) {
-    user['hash'] = bcrypt.hashSync(userParam.password, 10);
-  }
-
-  // save user
-  await user.save();
-}
-
-async function update(id: string, userParam: iUser) {
-  const user = await User.findById(id);
-
-  // validate
-  if (!user) throw 'User not found';
-  if (
-    user.email !== userParam.email &&
-    (await User.findOne({ email: userParam.email }))
-  ) {
-    throw 'Email "' + userParam.email + '" is already taken';
-  }
-
-  // hash password if it was entered
-  if (userParam.password) {
-    userParam.hash = bcrypt.hashSync(userParam.password, 10);
-  }
-
-  // copy userParam properties to user
-  Object.assign(user, userParam);
-
-  await user.save();
-}
-
-async function _delete(id: string) {
-  await User.findByIdAndRemove(id);
-}
-
-export default {
-  login,
-  getById,
-  create,
-  update,
-  delete: _delete,
-};
+export const userService = new UserService();
