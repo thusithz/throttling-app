@@ -1,59 +1,51 @@
-# Throttling App Server (Express API)
 
-This project is exposing end points with {api/v1} version (authentication is validating with JWT token)
-- [IP Throttling] specialy limits requests for an IP in a certain interval using redis caching
+# Backend API Service
 
+A robust Express.js API service with IP-based request throttling and JWT authentication.
 
-Includes API Server utilities:
+## Features
 
-- [morgan]
-  - HTTP request logger middleware for node.js
-- [helmet]
-  - Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
-- [dotenv]
-  - Dotenv is a zero-dependency module that loads environment variables from a `.env` file into `process.env`
+- IP-based request throttling using Redis
+- JWT authentication
+- TypeScript implementation
+- Comprehensive test coverage
+- Structured logging with Morgan
+- Security headers with Helmet
 
-Development utilities:
+## Prerequisites
 
-- [ts-node-dev]
-  - ts-node-dev is a library that restarts target node process when any of required files changes (as standard node-dev) but shares Typescript compilation process between restarts.
-- [eslint]
-  - ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.
-- [typescript]
-  - TypeScript is a language for application-scale JavaScript. Javascript with superpowers!
-
-## Pre require setup
-
-```
-nodejs, mongodb, Redis
-```
+- Node.js
+- MongoDB
+- Redis
 
 ## Setup
 
-```
+1. Install dependencies:
+```bash
 yarn install
 ```
 
-## Lint
+2. Create `.env` file with required environment variables.
 
-```
-yarn run lint
-```
+## Available Scripts
 
-## Test
+- `yarn start` - Start development server
+- `yarn build` - Build production bundle
+- `yarn test` - Run test suite
+- `yarn lint` - Run ESLint checks
 
-```
-yarn run test
-```
+## API Documentation
 
-## Development
+API endpoints are versioned under `/api/v1` with JWT authentication middleware.
 
-```
-yarn run start
-```
+### Core Endpoints:
+- Authentication routes
+- User management
+- System health checks
 
-## Build
+## Security
 
-```
-yarn run build
-```
+- Implements rate limiting
+- JWT token validation
+- Secure HTTP headers
+- Input validation
