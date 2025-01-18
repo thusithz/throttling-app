@@ -1,85 +1,69 @@
 import React from 'react';
-import { render, fireEvent, cleanup, act } from '@testing-library/react';
-import { schema, iLoginForm } from './Login';
-import LoginForm from './LoginForm';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { Formik } from 'formik';
+import LoginForm from './LoginForm';
+import { schema } from './Login';
 
-const connectWithFormik = (Component: any) => ({ formik, ...otherProps }) => {
-  return (
-    <Formik
-      initialValues={formik && formik.values}
-      // eslint-disable-next-line
-      onSubmit={(values: iLoginForm, actions) => {}}
-      validationSchema={schema}
-      validateOnChange
-      validateOnBlur
-    >
-      <Component formik={formik} {...otherProps} />
-    </Formik>
-  );
-};
-
-describe('LoginForm Page', () => {
-  afterEach(() => cleanup());
-
-  test('Form Error State', async () => {
-    const loginFormWithFormik = connectWithFormik(LoginForm);
-    const { container, getByText, getAllByLabelText } = render(
-      loginFormWithFormik({
-        values: { email: 'test gmail.com', password: '123' },
-        formik: {
-          values: { email: 'test gmail.com', password: '123' },
-          setFieldValue: jest.fn,
-          setFieldTouched: jest.fn,
-        },
-      }),
+describe('LoginForm Component', () => {
+  const renderLoginForm = (initialValues = { email: '', password: '' }) => {
+    render(
+      <BrowserRouter>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={schema}
+          onSubmit={jest.fn()}
+        >
+          <LoginForm />
+        </Formik>
+      </BrowserRouter>,
     );
+  };
 
-    expect(container.querySelector("button[id='submit']")).toBeDisabled();
-
-    const emailInput = container.querySelector("input[id='email']");
-
-    act(() => {
-      fireEvent.blur(emailInput);
-    });
-
+  it('should render form elements', () => {
+    renderLoginForm();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(
-      await container.querySelector("p[id='email-helper-text'"),
-    ).toBeDefined();
-
-    expect(
-      await container.querySelector("p[id='password-helper-text'"),
-    ).toBeDefined();
+      screen.getByRole('button', { name: /sign in/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/forgot password/i)).toBeInTheDocument();
+    expect(screen.getByText(/don't have an account/i)).toBeInTheDocument();
   });
 
-  test('Form Susccess State', async () => {
-    const loginFormWithFormik = connectWithFormik(LoginForm);
-    const { container, getByText, getAllByLabelText } = render(
-      loginFormWithFormik({
-        values: { email: 'test@gmail.com', password: '12345Abcd!2' },
-        formik: {
-          values: { email: 'test@gmail.com', password: '12345Abcd!2' },
-          setFieldValue: jest.fn,
-          setFieldTouched: jest.fn,
-        },
-      }),
-    );
+  it('should show validation errors for invalid inputs', async () => {
+    renderLoginForm();
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
 
-    const submitButtom = container.querySelector("button[id='submit']");
-    expect(submitButtom).toBeDisabled();
+    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+    fireEvent.change(passwordInput, { target: { value: 'weak' } });
+    fireEvent.blur(emailInput);
+    fireEvent.blur(passwordInput);
 
-    const emailInput = container.querySelector("input[id='email']");
-
-    act(() => {
-      fireEvent.blur(emailInput);
+    await waitFor(() => {
+      expect(screen.getByText(/Email must be a valid email/i)).toBeInTheDocument();
+      expect(screen.getByText(/Please valid password. One uppercase, one lowercase, one special character and no spaces/i)).toBeInTheDocument();
     });
+  });
 
-    expect(
-      await container.querySelector("p[id='email-helper-text'"),
-    ).toBeNull();
+  it('should not show validation errors for valid inputs', async () => {
+    renderLoginForm();
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
 
-    expect(
-      await container.querySelector("p[id='password-helper-text'"),
-    ).toBeNull();
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'ValidPass1!' } });
+    fireEvent.blur(emailInput);
+    fireEvent.blur(passwordInput);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText(/enter valid email-id/i),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/please valid password/i),
+      ).not.toBeInTheDocument();
+    });
   });
 });

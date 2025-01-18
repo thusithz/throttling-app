@@ -63,8 +63,10 @@ function SignupForm(props: any) {
           },
         ]);
 
-        //TODO Need to dispatch into store and redirect
-        //if (status === 201) {}
+        if (res?.data?.data?.token) {
+          localStorage.setItem('token', res?.data?.data?.token);
+          window.location.href = '/dashboard';
+        }
       } catch (err) {
         setAlertQueue([
           ...alertQueue,

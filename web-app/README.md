@@ -1,39 +1,45 @@
-# Throttling App Front End (ReactJs)
 
-## Pre require setup
+# Frontend Application
 
-```
-nodejs
-```
+A modern React.js application with Material-UI components and comprehensive testing.
+
+## Features
+
+- Material-UI component library
+- Form validation with Formik
+- TypeScript implementation
+- Unit testing with Jest
+- Responsive design
+- Theme customization
+
+## Prerequisites
+
+- Node.js
+- Yarn package manager
 
 ## Setup
 
-```
+1. Install dependencies:
+```bash
 yarn install
 ```
 
-## Lint
+## Available Scripts
 
-```
-yarn run lint
-```
+- `yarn start` - Start development server
+- `yarn build` - Build production bundle
+- `yarn test` - Run test suite with coverage
+- `yarn lint` - Run ESLint checks
+- `yarn prettier` - Format code with Prettier
 
-## Test
+## Architecture
 
-```
-yarn run test
-```
+- Component-based architecture
+- React Router for navigation
+- Axios for API communication
 
-## Development
+## Testing
 
-```
-yarn run start
-```
-
-
-## Build
-
-```
-yarn run build
-```
-
+- Jest test framework
+- React Testing Library
+- Coverage reporting

@@ -1,28 +1,23 @@
 import { Request } from 'express';
-import expressJwt from 'express-jwt';
+import { expressjwt } from 'express-jwt';
+import { Algorithm } from 'jsonwebtoken';
 
-import userService from '../api/v1/user/user.service';
+import { UserService } from '../api/v1/user/user.service';
+const userService = new UserService();
 import publicRoutes from '../config/publicRoutes';
 
-// eslint-disable-next-line
-async function isRevoked(req: Request, payload: any, next: any) {
-  const user = await userService.getById(payload.sub);
-
-  // revoke token if user no longer exists
-  if (!user) {
-    return next(null, true);
-  }
-  next();
+async function isRevoked(req: Request, token: any) {
+  const user = await userService.findById(token.payload.sub);
+  return !user;
 }
 
 function jwt() {
-  const secret = process.env.SECRET || '12wrty56yu';
-  return expressJwt({
+  const secret = process.env.SECRET ?? '12wrty56yu';
+  return expressjwt({
     secret,
-    algorithms: [process.env.ALGORITHMS || 'HS256'],
+    algorithms: [(process.env.ALGORITHMS ?? 'HS256') as Algorithm],
     isRevoked,
   }).unless({
-    // exclude public routes that are n't require authentication
     path: publicRoutes,
   });
 }

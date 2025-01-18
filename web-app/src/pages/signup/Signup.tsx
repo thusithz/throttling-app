@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import * as Yup from 'yup';
 import SignupForm from './SignupForm';
 
 import { Formik } from 'formik';
 
-interface iSignUpForm {
+interface ISignUpForm {
   email: string;
   password: string;
   confirmPassword: string;
@@ -31,29 +31,23 @@ const schema = Yup.object().shape({
     }),
 });
 
-// eslint-disable-next-line
 function Signup() {
   return (
-    <Fragment>
-      <Formik
-        initialValues={{
-          firstName: '',
-          LastName: '',
-          password: '',
-          confirmPassword: '',
-          email: '',
-        }}
-        // eslint-disable-next-line
-        onSubmit={(values: iSignUpForm, actions) => {}}
-        validationSchema={schema}
-        validateOnChange
-        validateOnBlur
-      >
-        <div className="signup-conatiner">
-          <SignupForm />
-        </div>
-      </Formik>
-    </Fragment>
+    <Formik
+      initialValues={{
+        firstName: '',
+        LastName: '',
+        password: '',
+        confirmPassword: '',
+        email: '',
+      }}
+      validationSchema={schema}
+      onSubmit={() => {}}
+    >
+      <div className="signup-conatiner">
+        <SignupForm />
+      </div>
+    </Formik>
   );
 }
 

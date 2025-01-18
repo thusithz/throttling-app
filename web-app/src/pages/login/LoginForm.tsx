@@ -37,7 +37,6 @@ const defaultFieldPros = (fieldName: string) => {
   };
 };
 
-// eslint-disable-next-line
 function LoginForm(props: any) {
   const classes = useStyles();
   const [alertQueue, setAlertQueue] = useState<iAlert[]>([]);
@@ -64,8 +63,10 @@ function LoginForm(props: any) {
           },
         ]);
 
-        //TODO Need to dispatch into store and redirect
-        //if (status === 200) {}
+        if (res?.data?.data?.token) {
+          localStorage.setItem('token', res?.data?.data?.token);
+          window.location.href = '/dashboard';
+        }
       } catch (err) {
         setAlertQueue([
           ...alertQueue,
@@ -92,7 +93,9 @@ function LoginForm(props: any) {
             autoComplete="current-password"
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox value="remember" color="primary" disableRipple />
+            }
             label="Remember me"
           />
           <Button
@@ -113,7 +116,7 @@ function LoginForm(props: any) {
                 Forgot password?
               </Link>
             </Grid>
-            <Grid item justify="flex-end">
+            <Grid item justifyContent="flex-end">
               <Link href="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>

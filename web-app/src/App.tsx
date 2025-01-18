@@ -1,6 +1,5 @@
-import React, { Fragment, Suspense, lazy } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
-
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Loading from './ui-components/Loading';
 
 const LoginLazy = lazy(
@@ -11,26 +10,28 @@ const SignupLazy = lazy(
   () => import(/* webpackChunkName: "signup-page" */ './pages/signup/Signup'),
 );
 
-const DashboardLazy = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "dashboard-page" */ './pages/dashboard/Dashboard'
-    ),
+const DashboardLazy = lazy(() => import('./pages/dashboard/Dashboard'));
+const ProfileLazy = lazy(() => import('./pages/profile/Profile'));
+const SettingsLazy = lazy(() => import('./pages/settings/Settings'));
+const ForgotPasswordLazy = lazy(
+  () => import('./pages/forgot-password/ForgotPassword'),
 );
 
-// eslint-disable-next-line
 function App() {
   return (
-    <Fragment>
-      <BrowserRouter>
-        <Suspense fallback={<Loading />}>
-          <Route path="/" component={LoginLazy} exact />
-          <Route path="/login" component={LoginLazy} />
-          <Route path="/signup" component={SignupLazy} />
-          <Route path="/dashboard" component={DashboardLazy} />
-        </Suspense>
-      </BrowserRouter>
-    </Fragment>
+    <BrowserRouter>
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route path="/" element={<LoginLazy />} />
+          <Route path="/login" element={<LoginLazy />} />
+          <Route path="/signup" element={<SignupLazy />} />
+          <Route path="/dashboard" element={<DashboardLazy />} />
+          <Route path="/profile" element={<ProfileLazy />} />
+          <Route path="/settings" element={<SettingsLazy />} />
+          <Route path="/forgot-password" element={<ForgotPasswordLazy />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
 }
 
